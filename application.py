@@ -28,7 +28,7 @@ def play(row, col):
     session["board"][row][col] = session["turn"]
     session["turn"] = "O" if session["turn"] == "X" else "X"
 
-    if win(session["board"], row, col)[0]:
+    if win(session["board"], row, col):
         return render_template("win.html", win=win(session["board"], row, col), board=session["board"])
   
     return redirect(url_for("index"))
