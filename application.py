@@ -43,7 +43,7 @@ def reset():
     return redirect(url_for("index"))
 
 
-# refactor to only check depending on row, col
+# checks if the move has ended game
 def win(board, row, col):
     piece = board[row][col]
     # check row
@@ -53,7 +53,7 @@ def win(board, row, col):
     elif board[(row+1)%3][col] == piece and board[(row+2)%3][col] == piece:
         return piece
     # see if piece is on diagonal
-    elif row == 1 and col == 1:
+    if row == 1 and col == 1:
         # check both diagonals
         if (board[0][0] == piece and board[2][2] == piece) or (board[0][2] == piece and board[2][0] == piece):
             return piece
