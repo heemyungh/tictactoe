@@ -1,0 +1,21 @@
+{% extends "layout.html" %}
+    {% block body %}
+        {% if win == "tie" %}
+        <h1>You tied!</h1>
+        {% else %}
+        <h1>{{ win }} wins!</h1>
+        {% endif %}
+        <table>
+            {% for i in range(3) %}
+            <tr>
+                {% for j in range(3) %}
+                <td>
+                    {% if board[i][j] %}
+                        {{ board[i][j] }}
+                    {% endif %}
+                </td>
+                {% endfor %}
+            </tr>
+            {% endfor %}
+        </table>
+    {% endblock %}

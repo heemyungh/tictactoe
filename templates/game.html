@@ -1,0 +1,19 @@
+{% extends "layout.html" %}
+
+    {% block body %}
+        <table>
+            {% for i in range(3) %}
+            <tr>
+                {% for j in range(3) %}
+                <td>
+                    {% if board[i][j] %}
+                        {{ board[i][j] }}
+                    {% else %}
+                        <a href="{{ url_for('play', row=i, col=j) }}">Play {{turn}} here.</a>
+                    {% endif %}
+                </td>
+                {% endfor %}
+            </tr>
+            {% endfor %}
+        </table>
+    {% endblock %}
