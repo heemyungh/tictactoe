@@ -1,15 +1,15 @@
 {% extends "layout.html" %}
     {% block body %}
-        {% if win == "tie" %}
+        {% if win[0] == "tie" %}
         <h1>You tied!</h1>
         {% else %}
-        <h1>{{ win }} wins!</h1>
+        <h1>{{ win[0] }} wins!</h1>
         {% endif %}
         <table>
             {% for i in range(3) %}
             <tr>
                 {% for j in range(3) %}
-                <td>
+                <td {% if (i,j) in win %}class="win"{% endif %}>
                     {% if board[i][j] %}
                         {{ board[i][j] }}
                     {% endif %}

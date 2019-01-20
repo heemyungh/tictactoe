@@ -9,6 +9,8 @@ app.config["SESSION_PERMANENT"] = False
 app.config["SESSION_TYPE"] = "filesystem"
 Session(app)
 
+BOARD = 3
+
 
 @app.route("/")
 def index():
@@ -26,7 +28,7 @@ def play(row, col):
     session["board"][row][col] = session["turn"]
     session["turn"] = "O" if session["turn"] == "X" else "X"
 
-    if win(session["board"], row, col):
+    if win(session["board"], row, col)[0]:
         return render_template("win.html", win=win(session["board"], row, col), board=session["board"])
   
     return redirect(url_for("index"))
@@ -46,25 +48,29 @@ def reset():
 def win(board, row, col):
     piece = board[row][col]
     # check row
-    if board[row][(col+1)%3] == piece and board[row][(col+2)%3] == piece:
-        return piece
+    if board[row][wrap(col+1)] == piece and board[row][wrap(col+2)] == piece:
+        return piece, (row, col), (row, wrap(col+1)), (row, wrap(col+2))
     # check col
-    if board[(row+1)%3][col] == piece and board[(row+2)%3][col] == piece:
-        return piece
+    if board[wrap(row+1)][col] == piece and board[wrap(row+2)][col] == piece:
+        return piece, (row, col), (wrap(row+1), col), (wrap(row+2), col)
     # see if piece is on diagonal
     if row == col:
         # down-right diagonal
-        if board[(row+1)%3][(col+1)%3] == piece and board[(row+2)%3][(col+2)%3] == piece:
-            return piece
+        if board[wrap(row+1)][wrap(col+1)] == piece and board[wrap(row+2)][wrap(col+2)] == piece:
+            return piece, (row, col), (wrap(row+1), wrap(col+1)), (wrap(row+2), wrap(col+2))
     if row + col == 2:
         # down-left diagonal
-        if board[(row+1)%3][(col-1)%3] == piece and board[(row+2)%3][(col-2)%3] == piece:
-            return piece
+        if board[wrap(row+1)][wrap(col-1)] == piece and board[wrap(row+2)][wrap(col-2)] == piece:
+            return piece, (row, col), (wrap(row+1), wrap(col-1)), (wrap(row+2), col(row-2))
     # either tie or incomplete
     for i in range(3):
         for j in range(3):
             # unplayed move exists
             if not board[i][j]:
                 return None
-    
     return "tie"
+
+
+# lets indices wrap around board
+def wrap(n):
+    return n % BOARD
