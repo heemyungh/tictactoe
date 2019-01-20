@@ -37,9 +37,8 @@ def reset():
     try:
         del session["board"]
         del session["turn"]
-    except:
-        print("no board")
-
+    except KeyError:
+        pass
     return redirect(url_for("index"))
 
 
@@ -50,26 +49,21 @@ def win(board, row, col):
     if board[row][(col+1)%3] == piece and board[row][(col+2)%3] == piece:
         return piece
     # check col
-    elif board[(row+1)%3][col] == piece and board[(row+2)%3][col] == piece:
+    if board[(row+1)%3][col] == piece and board[(row+2)%3][col] == piece:
         return piece
     # see if piece is on diagonal
-    if row == 1 and col == 1:
-        # check both diagonals
-        if (board[0][0] == piece and board[2][2] == piece) or (board[0][2] == piece and board[2][0] == piece):
+    if row == col:
+        # down-right diagonal
+        if board[(row+1)%3][(col+1)%3] == piece and board[(row+2)%3][(col+2)%3] == piece:
             return piece
-    elif row != 1 and col != 1:
-        # check one diagonal
-        if row == col:
-            if board[(row+1)%3][(col+1)%3] == piece and board[(row+2)%3][(col+2)%3] == piece:
-                return piece
-        else:
-            if board[(row+1)%3][(col-1)%3] == piece and board[(row+2)%3][(col-2)%3] == piece:
-                return piece
-    # check tie scenario?
-    else:
-        for i in range(3):
-            for j in range(3):
-                # unplayed move exists
-                if not board[i][j]:
-                    return None
-        return "tie"
+    if row + col == 2:
+        # down-left diagonal
+        if board[(row+1)%3][(col-1)%3] == piece and board[(row+2)%3][(col-2)%3] == piece:
+            return piece
+    # either tie or incomplete
+    for i in range(3):
+        for j in range(3):
+            # unplayed move exists
+            if not board[i][j]:
+                return None
+            return "tie"
