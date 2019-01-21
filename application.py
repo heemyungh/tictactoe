@@ -68,7 +68,7 @@ def win(board, row, col):
             # unplayed move exists
             if not board[i][j]:
                 return None
-    return "tie"
+    return "tie", None
 
 
 # lets indices wrap around board
